@@ -111,7 +111,7 @@ describe('SearchProvider and CommandMenu', () => {
 
     await userEvent.click(screen.getByText('Mikrotik'))
 
-    expect(mocks.navigate).toHaveBeenCalledWith({ to: '/mikrotik' })
+    expect(mocks.navigate).toHaveBeenCalledWith({ to: '/mikrotik/pppoe' })
     await expect
       .element(screen.getByPlaceholder(COMMAND_MENU_PLACEHOLDER))
       .not.toBeInTheDocument()
