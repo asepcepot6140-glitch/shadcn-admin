@@ -7,12 +7,9 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { TopNav } from '@/components/layout/top-nav'
 import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { Analytics } from './components/analytics'
 import { Overview } from './components/overview'
@@ -23,15 +20,14 @@ export function Dashboard() {
     <>
       {/* ===== Top Heading ===== */}
       <Header>
-        <TopNav links={topNav} className='me-auto' />
-        <Search />
-        <ThemeSwitch />
-        <ConfigDrawer />
-        <ProfileDropdown />
+        <div className='ms-auto flex items-center gap-2'>
+          <ThemeSwitch />
+          <ProfileDropdown />
+        </div>
       </Header>
 
       {/* ===== Main ===== */}
-      <Main>
+      <Main fluid>
         <div className='mb-2 flex items-center justify-between space-y-2'>
           <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
           <div className='flex items-center space-x-2'>
@@ -41,7 +37,7 @@ export function Dashboard() {
         <Tabs
           orientation='vertical'
           defaultValue='overview'
-          className='space-y-4'
+          className='space-y-2'
         >
           <div className='w-full overflow-x-auto pb-2'>
             <TabsList>
@@ -55,10 +51,10 @@ export function Dashboard() {
               </TabsTrigger>
             </TabsList>
           </div>
-          <TabsContent value='overview' className='space-y-4'>
-            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-              <Card>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+          <TabsContent value='overview' className='space-y-2'>
+            <div className='grid gap-2 sm:grid-cols-2 lg:grid-cols-4'>
+              <Card className='gap-2 py-2'>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 py-0 px-4'>
                   <CardTitle className='text-sm font-medium'>
                     Total Revenue
                   </CardTitle>
@@ -75,15 +71,15 @@ export function Dashboard() {
                     <path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
                   </svg>
                 </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold'>$45,231.89</div>
+                <CardContent className='pb-0 pt-0'>
+                  <div className='text-xl font-bold'>$45,231.89</div>
                   <p className='text-xs text-muted-foreground'>
                     +20.1% from last month
                   </p>
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+              <Card className='gap-2 py-2'>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 py-0 px-4'>
                   <CardTitle className='text-sm font-medium'>
                     Subscriptions
                   </CardTitle>
@@ -102,15 +98,15 @@ export function Dashboard() {
                     <path d='M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' />
                   </svg>
                 </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold'>+2350</div>
+                <CardContent className='pb-0 pt-0'>
+                  <div className='text-xl font-bold'>+2350</div>
                   <p className='text-xs text-muted-foreground'>
                     +180.1% from last month
                   </p>
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+              <Card className='gap-2 py-2'>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 py-0 px-4'>
                   <CardTitle className='text-sm font-medium'>Sales</CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -126,15 +122,15 @@ export function Dashboard() {
                     <path d='M2 10h20' />
                   </svg>
                 </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold'>+12,234</div>
+                <CardContent className='pb-0 pt-0'>
+                  <div className='text-xl font-bold'>+12,234</div>
                   <p className='text-xs text-muted-foreground'>
                     +19% from last month
                   </p>
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+              <Card className='gap-2 py-2'>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 py-0 px-4'>
                   <CardTitle className='text-sm font-medium'>
                     Active Now
                   </CardTitle>
@@ -151,17 +147,17 @@ export function Dashboard() {
                     <path d='M22 12h-4l-3 9L9 3l-3 9H2' />
                   </svg>
                 </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold'>+573</div>
+                <CardContent className='pb-0 pt-0'>
+                  <div className='text-xl font-bold'>+573</div>
                   <p className='text-xs text-muted-foreground'>
                     +201 since last hour
                   </p>
                 </CardContent>
               </Card>
             </div>
-            <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
+            <div className='grid grid-cols-1 gap-2 lg:grid-cols-7'>
               <Card className='col-span-1 lg:col-span-4'>
-                <CardHeader>
+                <CardHeader className='pb-2'>
                   <CardTitle>Overview</CardTitle>
                 </CardHeader>
                 <CardContent className='ps-2'>
@@ -169,19 +165,19 @@ export function Dashboard() {
                 </CardContent>
               </Card>
               <Card className='col-span-1 lg:col-span-3'>
-                <CardHeader>
+                <CardHeader className='pb-2'>
                   <CardTitle>Recent Sales</CardTitle>
                   <CardDescription>
                     You made 265 sales this month.
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className='pb-2'>
                   <RecentSales />
                 </CardContent>
               </Card>
             </div>
           </TabsContent>
-          <TabsContent value='analytics' className='space-y-4'>
+          <TabsContent value='analytics' className='space-y-2'>
             <Analytics />
           </TabsContent>
         </Tabs>
@@ -189,30 +185,3 @@ export function Dashboard() {
     </>
   )
 }
-
-const topNav = [
-  {
-    title: 'Overview',
-    href: 'dashboard/overview',
-    isActive: true,
-    disabled: false,
-  },
-  {
-    title: 'Customers',
-    href: 'dashboard/customers',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Products',
-    href: 'dashboard/products',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Settings',
-    href: 'dashboard/settings',
-    isActive: false,
-    disabled: true,
-  },
-]
