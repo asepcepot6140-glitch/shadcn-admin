@@ -1,28 +1,4 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
-import { Pencil, Trash2, Plus, Search } from 'lucide-react'
-import { Header } from '@/components/layout/header'
-import { Main } from '@/components/layout/main'
-import { ThemeSwitch } from '@/components/theme-switch'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import {
   Box,
   InputAdornment,
@@ -38,6 +14,30 @@ import {
   ThemeProvider,
   createTheme,
 } from '@mui/material'
+import { Pencil, Trash2, Plus, Search } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Header } from '@/components/layout/header'
+import { Main } from '@/components/layout/main'
+import { ProfileDropdown } from '@/components/profile-dropdown'
+import { ThemeSwitch } from '@/components/theme-switch'
 import { initialPppoeSecrets, type PppoeSecret } from './data/secrets'
 
 /* ------------------------------ Types & data ------------------------------ */
@@ -107,8 +107,22 @@ const initialActiveSessions: ActiveSession[] = [
 ]
 
 const initialProfiles: ProfileItem[] = [
-  { index: 0, flags: '*', name: 'default', localAddress: '-', remoteAddress: '-', rateLimit: '-' },
-  { index: 1, flags: '', name: '7mb', localAddress: '192.168.252.1', remoteAddress: 'pool-PPPoE', rateLimit: '7M/7M' },
+  {
+    index: 0,
+    flags: '*',
+    name: 'default',
+    localAddress: '-',
+    remoteAddress: '-',
+    rateLimit: '-',
+  },
+  {
+    index: 1,
+    flags: '',
+    name: '7mb',
+    localAddress: '192.168.252.1',
+    remoteAddress: 'pool-PPPoE',
+    rateLimit: '7M/7M',
+  },
 ]
 
 // Daftar router sementara (statis), nanti diganti dari API
@@ -150,7 +164,10 @@ const emptyProfile: Partial<ProfileItem> = {
 
 const secretColumns: Column<PppoeSecret>[] = [
   { header: 'Flags', cell: (r) => r.flags, className: 'w-16' },
-  { header: 'Name', cell: (r) => <span className='font-semibold'>{r.name}</span> },
+  {
+    header: 'Name',
+    cell: (r) => <span className='font-semibold'>{r.name}</span>,
+  },
   { header: 'Service', cell: (r) => r.service },
   { header: 'Password', cell: (r) => r.password },
   { header: 'Profile', cell: (r) => r.profile },
@@ -164,7 +181,10 @@ const secretColumns: Column<PppoeSecret>[] = [
 // Dipakai bersama oleh tab Online dan Active
 const sessionColumns: Column<ActiveSession>[] = [
   { header: 'Flags', cell: (r) => r.flags, className: 'w-16' },
-  { header: 'Name', cell: (r) => <span className='font-semibold'>{r.name}</span> },
+  {
+    header: 'Name',
+    cell: (r) => <span className='font-semibold'>{r.name}</span>,
+  },
   { header: 'Service', cell: (r) => r.service },
   { header: 'Caller ID', cell: (r) => r.callerId },
   { header: 'Address', cell: (r) => r.address },
@@ -174,7 +194,10 @@ const sessionColumns: Column<ActiveSession>[] = [
 
 const profileColumns: Column<ProfileItem>[] = [
   { header: 'Flags', cell: (r) => r.flags, className: 'w-16' },
-  { header: 'Name', cell: (r) => <span className='font-semibold'>{r.name}</span> },
+  {
+    header: 'Name',
+    cell: (r) => <span className='font-semibold'>{r.name}</span>,
+  },
   { header: 'Local Address', cell: (r) => r.localAddress },
   { header: 'Remote Address', cell: (r) => r.remoteAddress },
   { header: 'Rate Limit', cell: (r) => r.rateLimit },
@@ -184,9 +207,25 @@ const serviceOptions = ['any', 'pppoe', 'pptp', 'l2tp', 'sstp', 'ovpn', 'async']
 
 const secretFields: Field<PppoeSecret>[] = [
   { key: 'name', label: 'Name', placeholder: 'Username', required: true },
-  { key: 'password', label: 'Password', placeholder: 'Password', required: true },
-  { key: 'service', label: 'Service', placeholder: 'Pilih service', required: true, options: serviceOptions },
-  { key: 'profile', label: 'Profile', placeholder: 'Pilih profile', required: true },
+  {
+    key: 'password',
+    label: 'Password',
+    placeholder: 'Password',
+    required: true,
+  },
+  {
+    key: 'service',
+    label: 'Service',
+    placeholder: 'Pilih service',
+    required: true,
+    options: serviceOptions,
+  },
+  {
+    key: 'profile',
+    label: 'Profile',
+    placeholder: 'Pilih profile',
+    required: true,
+  },
   { key: 'localAddress', label: 'Local Address', placeholder: '0.0.0.0' },
   { key: 'remoteAddress', label: 'Remote Address', placeholder: '0.0.0.0' },
 ]
@@ -346,7 +385,9 @@ function DataTable<T extends { index: number }>({
                   </TableCell>
                 ))}
                 <TableCell align='center'>
-                  <div className='flex items-center justify-center gap-1'>{actions(row)}</div>
+                  <div className='flex items-center justify-center gap-1'>
+                    {actions(row)}
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -431,9 +472,11 @@ function FormDialog<T extends object>({
       <DialogContent className='p-0 sm:max-w-md' showCloseButton={false}>
         <DialogHeader className='border-b px-6 py-3'>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription className='sr-only'>{title} form</DialogDescription>
+          <DialogDescription className='sr-only'>
+            {title} form
+          </DialogDescription>
         </DialogHeader>
-        <form onSubmit={onSubmit} className='space-y-4 px-6 pb-6 pt-2.5'>
+        <form onSubmit={onSubmit} className='space-y-4 px-6 pt-2.5 pb-6'>
           <div className='flex flex-col gap-4'>
             {fields.map((f) => {
               const id = `${idPrefix}-${f.key}`
@@ -444,27 +487,35 @@ function FormDialog<T extends object>({
                   {f.options ? (
                     <Select
                       value={value}
-                      onValueChange={(v) => onChange({ ...data, [f.key]: v } as Partial<T>)}
+                      onValueChange={(v) =>
+                        onChange({ ...data, [f.key]: v } as Partial<T>)
+                      }
                     >
                       <SelectTrigger id={id} className='w-full'>
                         <SelectValue placeholder={f.placeholder} />
                       </SelectTrigger>
                       <SelectContent>
                         {/* Pertahankan nilai lama yang tidak ada di daftar */}
-                        {(value && !f.options.includes(value) ? [value, ...f.options] : f.options).map(
-                          (opt) => (
-                            <SelectItem key={opt} value={opt}>
-                              {opt}
-                            </SelectItem>
-                          )
-                        )}
+                        {(value && !f.options.includes(value)
+                          ? [value, ...f.options]
+                          : f.options
+                        ).map((opt) => (
+                          <SelectItem key={opt} value={opt}>
+                            {opt}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   ) : (
                     <Input
                       id={id}
                       value={value}
-                      onChange={(e) => onChange({ ...data, [f.key]: e.target.value } as Partial<T>)}
+                      onChange={(e) =>
+                        onChange({
+                          ...data,
+                          [f.key]: e.target.value,
+                        } as Partial<T>)
+                      }
                       placeholder={f.placeholder}
                       required={f.required}
                     />
@@ -474,7 +525,11 @@ function FormDialog<T extends object>({
             })}
           </div>
           <DialogFooter className='pt-2'>
-            <Button type='button' variant='outline' onClick={() => onOpenChange(false)}>
+            <Button
+              type='button'
+              variant='outline'
+              onClick={() => onOpenChange(false)}
+            >
               Cancel
             </Button>
             <Button type='submit'>{submitLabel}</Button>
@@ -493,8 +548,8 @@ const nextIndex = (items: { index: number }[]) =>
 export function PppoeSecrets() {
   const muiTheme = useMuiTheme()
   const [routerId, setRouterId] = useState(routers[0].id)
-  const [dataByRouter, setDataByRouter] = useState<Record<string, RouterData>>(() =>
-    Object.fromEntries(routers.map((r) => [r.id, initialRouterData()]))
+  const [dataByRouter, setDataByRouter] = useState<Record<string, RouterData>>(
+    () => Object.fromEntries(routers.map((r) => [r.id, initialRouterData()]))
   )
 
   const { secrets, activeSessions, profiles } = dataByRouter[routerId]
@@ -521,10 +576,18 @@ export function PppoeSecrets() {
     f.key === 'profile' ? { ...f, options: profiles.map((p) => p.name) } : f
   )
 
-  const [secretDialog, setSecretDialog] = useState({ open: false, editing: false })
-  const [secretForm, setSecretForm] = useState<Partial<PppoeSecret>>(emptySecret)
-  const [profileDialog, setProfileDialog] = useState({ open: false, editing: false })
-  const [profileForm, setProfileForm] = useState<Partial<ProfileItem>>(emptyProfile)
+  const [secretDialog, setSecretDialog] = useState({
+    open: false,
+    editing: false,
+  })
+  const [secretForm, setSecretForm] =
+    useState<Partial<PppoeSecret>>(emptySecret)
+  const [profileDialog, setProfileDialog] = useState({
+    open: false,
+    editing: false,
+  })
+  const [profileForm, setProfileForm] =
+    useState<Partial<ProfileItem>>(emptyProfile)
 
   // Satu dialog konfirmasi untuk semua aksi hapus / kick
   const [confirm, setConfirm] = useState<ConfirmState | null>(null)
@@ -543,7 +606,11 @@ export function PppoeSecrets() {
   const submitSecret = (e: React.FormEvent) => {
     e.preventDefault()
     if (secretDialog.editing) {
-      setSecrets(secrets.map((s) => (s.index === secretForm.index ? (secretForm as PppoeSecret) : s)))
+      setSecrets(
+        secrets.map((s) =>
+          s.index === secretForm.index ? (secretForm as PppoeSecret) : s
+        )
+      )
     } else {
       setSecrets([
         ...secrets,
@@ -579,7 +646,11 @@ export function PppoeSecrets() {
   const submitProfile = (e: React.FormEvent) => {
     e.preventDefault()
     if (profileDialog.editing) {
-      setProfiles(profiles.map((p) => (p.index === profileForm.index ? (profileForm as ProfileItem) : p)))
+      setProfiles(
+        profiles.map((p) =>
+          p.index === profileForm.index ? (profileForm as ProfileItem) : p
+        )
+      )
     } else {
       setProfiles([
         ...profiles,
@@ -602,7 +673,8 @@ export function PppoeSecrets() {
       title: 'Hapus PPP Secret?',
       description: `Secret "${s.name}" akan dihapus. Tindakan ini tidak bisa dibatalkan.`,
       actionLabel: 'Hapus',
-      onConfirm: () => setSecrets((prev) => prev.filter((x) => x.index !== s.index)),
+      onConfirm: () =>
+        setSecrets((prev) => prev.filter((x) => x.index !== s.index)),
     })
 
   const confirmDeleteProfile = (p: ProfileItem) =>
@@ -610,7 +682,8 @@ export function PppoeSecrets() {
       title: 'Hapus PPP Profile?',
       description: `Profile "${p.name}" akan dihapus. Tindakan ini tidak bisa dibatalkan.`,
       actionLabel: 'Hapus',
-      onConfirm: () => setProfiles((prev) => prev.filter((x) => x.index !== p.index)),
+      onConfirm: () =>
+        setProfiles((prev) => prev.filter((x) => x.index !== p.index)),
     })
 
   const confirmKick = (s: ActiveSession) =>
@@ -618,7 +691,8 @@ export function PppoeSecrets() {
       title: 'Putuskan koneksi user?',
       description: `Sesi "${s.name}" (${s.address}) akan diputus.`,
       actionLabel: 'Putuskan',
-      onConfirm: () => setActiveSessions((prev) => prev.filter((x) => x.index !== s.index)),
+      onConfirm: () =>
+        setActiveSessions((prev) => prev.filter((x) => x.index !== s.index)),
     })
 
   const handleConfirm = () => {
@@ -649,7 +723,9 @@ export function PppoeSecrets() {
 
       <Main fixed fluid>
         <div className='mb-2'>
-          <h1 className='text-2xl font-bold tracking-tight'>PPPoE Management</h1>
+          <h1 className='text-2xl font-bold tracking-tight'>
+            PPPoE Management
+          </h1>
         </div>
 
         <ThemeProvider theme={muiTheme}>
@@ -673,7 +749,11 @@ export function PppoeSecrets() {
                     <IconButton title='Edit' onClick={() => openEditSecret(s)}>
                       <Pencil className='size-3.5' />
                     </IconButton>
-                    <IconButton title='Delete' destructive onClick={() => confirmDeleteSecret(s)}>
+                    <IconButton
+                      title='Delete'
+                      destructive
+                      onClick={() => confirmDeleteSecret(s)}
+                    >
                       <Trash2 className='size-3.5' />
                     </IconButton>
                   </>
@@ -688,7 +768,11 @@ export function PppoeSecrets() {
                   columns={sessionColumns}
                   rows={activeSessions}
                   actions={(s) => (
-                    <IconButton title='Disconnect / Kick' destructive onClick={() => confirmKick(s)}>
+                    <IconButton
+                      title='Disconnect / Kick'
+                      destructive
+                      onClick={() => confirmKick(s)}
+                    >
                       <Trash2 className='size-3.5' />
                     </IconButton>
                   )}
@@ -713,7 +797,11 @@ export function PppoeSecrets() {
                     <IconButton title='Edit' onClick={() => openEditProfile(p)}>
                       <Pencil className='size-3.5' />
                     </IconButton>
-                    <IconButton title='Delete' destructive onClick={() => confirmDeleteProfile(p)}>
+                    <IconButton
+                      title='Delete'
+                      destructive
+                      onClick={() => confirmDeleteProfile(p)}
+                    >
                       <Trash2 className='size-3.5' />
                     </IconButton>
                   </>
@@ -749,7 +837,10 @@ export function PppoeSecrets() {
       />
 
       {/* Dialog konfirmasi hapus / kick */}
-      <Dialog open={confirm !== null} onOpenChange={(open) => !open && setConfirm(null)}>
+      <Dialog
+        open={confirm !== null}
+        onOpenChange={(open) => !open && setConfirm(null)}
+      >
         <DialogContent className='sm:max-w-md' showCloseButton={false}>
           <DialogHeader>
             <DialogTitle>{confirm?.title}</DialogTitle>

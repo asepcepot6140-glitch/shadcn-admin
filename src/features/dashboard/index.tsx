@@ -54,7 +54,7 @@ export function Dashboard() {
           <TabsContent value='overview' className='space-y-2'>
             <div className='grid gap-2 sm:grid-cols-2 lg:grid-cols-4'>
               <Card className='gap-2 py-2'>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 py-0 px-4'>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 px-4 py-0'>
                   <CardTitle className='text-sm font-medium'>
                     Total Revenue
                   </CardTitle>
@@ -71,7 +71,7 @@ export function Dashboard() {
                     <path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
                   </svg>
                 </CardHeader>
-                <CardContent className='pb-0 pt-0'>
+                <CardContent className='pt-0 pb-0'>
                   <div className='text-xl font-bold'>$45,231.89</div>
                   <p className='text-xs text-muted-foreground'>
                     +20.1% from last month
@@ -79,7 +79,7 @@ export function Dashboard() {
                 </CardContent>
               </Card>
               <Card className='gap-2 py-2'>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 py-0 px-4'>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 px-4 py-0'>
                   <CardTitle className='text-sm font-medium'>
                     Subscriptions
                   </CardTitle>
@@ -98,7 +98,7 @@ export function Dashboard() {
                     <path d='M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' />
                   </svg>
                 </CardHeader>
-                <CardContent className='pb-0 pt-0'>
+                <CardContent className='pt-0 pb-0'>
                   <div className='text-xl font-bold'>+2350</div>
                   <p className='text-xs text-muted-foreground'>
                     +180.1% from last month
@@ -106,7 +106,7 @@ export function Dashboard() {
                 </CardContent>
               </Card>
               <Card className='gap-2 py-2'>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 py-0 px-4'>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 px-4 py-0'>
                   <CardTitle className='text-sm font-medium'>Sales</CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -122,7 +122,7 @@ export function Dashboard() {
                     <path d='M2 10h20' />
                   </svg>
                 </CardHeader>
-                <CardContent className='pb-0 pt-0'>
+                <CardContent className='pt-0 pb-0'>
                   <div className='text-xl font-bold'>+12,234</div>
                   <p className='text-xs text-muted-foreground'>
                     +19% from last month
@@ -130,7 +130,7 @@ export function Dashboard() {
                 </CardContent>
               </Card>
               <Card className='gap-2 py-2'>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 py-0 px-4'>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 px-4 py-0'>
                   <CardTitle className='text-sm font-medium'>
                     Active Now
                   </CardTitle>
@@ -147,7 +147,7 @@ export function Dashboard() {
                     <path d='M22 12h-4l-3 9L9 3l-3 9H2' />
                   </svg>
                 </CardHeader>
-                <CardContent className='pb-0 pt-0'>
+                <CardContent className='pt-0 pb-0'>
                   <div className='text-xl font-bold'>+573</div>
                   <p className='text-xs text-muted-foreground'>
                     +201 since last hour
