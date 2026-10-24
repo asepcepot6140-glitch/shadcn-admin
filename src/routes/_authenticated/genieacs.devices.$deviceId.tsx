@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
+import { createFileRoute } from '@tanstack/react-router'
 import { GenieACSDeviceDetail } from '@/features/genieacs/device-detail'
 
 export const Route = createFileRoute(
