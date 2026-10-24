@@ -6,21 +6,17 @@ import { Pencil, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { getAuthErrorMessage } from '@/lib/auth-api'
 import { Button } from '@/components/ui/button'
-import {
-  MuiDataTable,
-  type DataTableColumn,
-} from '@/components/data-table'
+import { MuiDataTable, type DataTableColumn } from '@/components/data-table'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { DeleteRouterDialog, RouterDialog } from './components/dialog'
 import {
-  DeleteRouterDialog,
   defaultValues,
-  RouterDialog,
   routerSchema,
   type RouterFormValues,
-} from './components/dialog'
+} from './components/dialog-schema'
 import {
   createMikrotikRouter,
   deleteMikrotikRouter,
@@ -86,7 +82,6 @@ export function MikrotikRouters() {
   })
 
   const loadRouters = useCallback(async () => {
-    setIsLoadingRouters(true)
     try {
       setRouters(await getMikrotikRouters())
     } catch (error) {
@@ -97,7 +92,8 @@ export function MikrotikRouters() {
   }, [])
 
   useEffect(() => {
-    void loadRouters()
+    const timer = window.setTimeout(() => void loadRouters(), 0)
+    return () => window.clearTimeout(timer)
   }, [loadRouters])
 
   async function onSubmit(values: RouterFormValues) {
@@ -127,6 +123,7 @@ export function MikrotikRouters() {
       form.reset(defaultValues)
       setIsDialogOpen(false)
       setEditingRouter(null)
+      setIsLoadingRouters(true)
       await loadRouters()
     } catch (error) {
       toast.error(getAuthErrorMessage(error))
@@ -160,6 +157,7 @@ export function MikrotikRouters() {
       const result = await deleteMikrotikRouter(deletingRouter.id)
       toast.success(result.message)
       setDeletingRouter(null)
+      setIsLoadingRouters(true)
       await loadRouters()
     } catch (error) {
       toast.error(getAuthErrorMessage(error))

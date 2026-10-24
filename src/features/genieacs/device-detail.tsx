@@ -434,6 +434,22 @@ export function GenieACSDeviceDetail() {
   const { configId } = useSearch({
     from: '/_authenticated/genieacs/devices/$deviceId',
   })
+  return (
+    <GenieACSDeviceDetailContent
+      key={`${configId}:${deviceId}`}
+      configId={configId}
+      deviceId={deviceId}
+    />
+  )
+}
+
+function GenieACSDeviceDetailContent({
+  configId,
+  deviceId,
+}: {
+  configId: number
+  deviceId: string
+}) {
   const [wan, setWan] = useState<GenieACSWAN[]>([])
   const [lan, setLan] = useState<GenieACSLAN | null>(null)
   const [wlan, setWlan] = useState<GenieACSWLAN[]>([])
@@ -572,16 +588,30 @@ export function GenieACSDeviceDetail() {
     }
   }
 
-  // Clear the previous device's data before loading the new one.
   useEffect(() => {
-    setWan([])
-    setLan(null)
-    setWlan([])
-  }, [configId, deviceId])
-
-  useEffect(() => {
-    void loadTab(activeTab)
-  }, [activeTab, loadTab])
+    const id = ++requestId.current
+    const isLatest = () => id === requestId.current
+    const loadActiveTab = async () => {
+      try {
+        if (activeTab === 'wan') {
+          const data = await getGenieACSDeviceWAN(configId, deviceId)
+          if (isLatest()) setWan(data ?? [])
+        } else if (activeTab === 'lan') {
+          const data = await getGenieACSDeviceLAN(configId, deviceId)
+          if (isLatest()) setLan(data ?? null)
+        } else if (activeTab === 'wlan') {
+          const data = await getGenieACSDeviceWLAN(configId, deviceId)
+          if (isLatest()) setWlan(data ?? [])
+        }
+      } catch (error) {
+        if (isLatest()) toast.error(getAuthErrorMessage(error))
+      }
+    }
+    void loadActiveTab()
+    return () => {
+      if (isLatest()) requestId.current += 1
+    }
+  }, [activeTab, configId, deviceId])
 
   const ipoeRows = useMemo(
     () => wan.filter((row) => row.kind === IPOE_KIND),

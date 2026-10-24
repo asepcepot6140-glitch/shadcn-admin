@@ -104,7 +104,6 @@ export function GenieACSDevices() {
   })
 
   const loadConfigs = useCallback(async () => {
-    setIsLoadingConfigs(true)
     try {
       const result = await getGenieACSConfigs()
       setConfigs(result)
@@ -120,13 +119,7 @@ export function GenieACSDevices() {
 
   const loadDevices = useCallback(async () => {
     const requestId = ++deviceRequestId.current
-    if (!selectedId) {
-      setDevices([])
-      setIsLoadingDevices(false)
-      return
-    }
-    setDevices([])
-    setIsLoadingDevices(true)
+    if (!selectedId) return
     try {
       const result = await getGenieACSDevices(Number(selectedId))
       if (requestId === deviceRequestId.current) setDevices(result.data)
@@ -147,6 +140,7 @@ export function GenieACSDevices() {
       const result = await summonGenieACSDevice(Number(selectedId), device.id)
       if (result.applied) {
         toast.success(result.message)
+        setIsLoadingDevices(true)
         await loadDevices()
       } else {
         toast.info(result.message)
@@ -168,6 +162,7 @@ export function GenieACSDevices() {
       )
       toast.success(result.message)
       setDeviceToDelete(null)
+      setIsLoadingDevices(true)
       await loadDevices()
     } catch (error) {
       toast.error(getAuthErrorMessage(error))
@@ -177,11 +172,13 @@ export function GenieACSDevices() {
   }
 
   useEffect(() => {
-    void loadConfigs()
+    const timer = window.setTimeout(() => void loadConfigs(), 0)
+    return () => window.clearTimeout(timer)
   }, [loadConfigs])
 
   useEffect(() => {
-    void loadDevices()
+    const timer = window.setTimeout(() => void loadDevices(), 0)
+    return () => window.clearTimeout(timer)
   }, [loadDevices])
 
   return (
@@ -204,7 +201,10 @@ export function GenieACSDevices() {
             title='Refresh devices'
             aria-label='Refresh devices'
             disabled={!selectedId || isLoadingDevices || isLoadingConfigs}
-            onClick={() => void loadDevices()}
+            onClick={() => {
+              setIsLoadingDevices(true)
+              void loadDevices()
+            }}
           >
             <RefreshCw
               className={cn('size-4', isLoadingDevices && 'animate-spin')}
@@ -230,6 +230,8 @@ export function GenieACSDevices() {
                 <Select
                   value={selectedId}
                   onValueChange={(value) => {
+                    setDevices([])
+                    setIsLoadingDevices(Boolean(value))
                     setSelectedId(value)
                     void navigate({
                       to: '/genieacs/devices',

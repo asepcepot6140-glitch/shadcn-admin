@@ -609,7 +609,6 @@ export function PppoeSecrets() {
   const dataRequestId = useRef(0)
 
   const loadRouters = useCallback(async () => {
-    setIsLoadingRouters(true)
     try {
       const result = await getMikrotikRouters()
       setRouters(result)
@@ -625,22 +624,7 @@ export function PppoeSecrets() {
 
   const loadRouterData = useCallback(async () => {
     const requestId = ++dataRequestId.current
-    if (!routerId) {
-      setSecrets([])
-      setOfflineSecrets([])
-      setActiveSessions([])
-      setProfiles([])
-      setIpPools([])
-      setQueueNames([])
-      return
-    }
-
-    setSecrets([])
-    setOfflineSecrets([])
-    setActiveSessions([])
-    setProfiles([])
-    setIpPools([])
-    setQueueNames([])
+    if (!routerId) return
     try {
       const id = Number(routerId)
       const [
@@ -669,16 +653,17 @@ export function PppoeSecrets() {
       if (requestId === dataRequestId.current) {
         toast.error(getPppoeErrorMessage(error))
       }
-    } finally {
     }
   }, [routerId])
 
   useEffect(() => {
-    void loadRouters()
+    const timer = window.setTimeout(() => void loadRouters(), 0)
+    return () => window.clearTimeout(timer)
   }, [loadRouters])
 
   useEffect(() => {
-    void loadRouterData()
+    const timer = window.setTimeout(() => void loadRouterData(), 0)
+    return () => window.clearTimeout(timer)
   }, [loadRouterData])
 
   const openAddSecret = () => {
@@ -912,7 +897,15 @@ export function PppoeSecrets() {
                   <>
                     <Select
                       value={routerId}
-                      onValueChange={setRouterId}
+                      onValueChange={(value) => {
+                        setSecrets([])
+                        setOfflineSecrets([])
+                        setActiveSessions([])
+                        setProfiles([])
+                        setIpPools([])
+                        setQueueNames([])
+                        setRouterId(value)
+                      }}
                       disabled={isLoadingRouters || routers.length === 0}
                     >
                       <SelectTrigger size='sm' className='h-7 w-full sm:w-43'>

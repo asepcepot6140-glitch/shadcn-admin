@@ -1,12 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Pencil, Trash2 } from 'lucide-react'
 import { ThemeProvider } from '@mui/material'
+import { Pencil, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { getAuthErrorMessage } from '@/lib/auth-api'
-import {
-  MuiDataTable,
-  type DataTableColumn,
-} from '@/components/data-table'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -18,11 +14,11 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { MuiDataTable, type DataTableColumn } from '@/components/data-table'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { useMuiTheme } from './use-mui-theme'
 import {
   createGenieACSConfig,
   deleteGenieACSConfig,
@@ -31,6 +27,7 @@ import {
   type GenieACSInput,
   updateGenieACSConfig,
 } from './genieacs-api'
+import { useMuiTheme } from './use-mui-theme'
 
 const emptyForm: GenieACSInput = { name: '', host: '', port: 7557 }
 
@@ -59,7 +56,6 @@ export function GenieACSIndex() {
   const [form, setForm] = useState<GenieACSInput>(emptyForm)
 
   const loadConfigs = useCallback(async () => {
-    setIsLoading(true)
     try {
       setConfigs(await getGenieACSConfigs())
     } catch (error) {
@@ -70,7 +66,8 @@ export function GenieACSIndex() {
   }, [])
 
   useEffect(() => {
-    void loadConfigs()
+    const timer = window.setTimeout(() => void loadConfigs(), 0)
+    return () => window.clearTimeout(timer)
   }, [loadConfigs])
 
   function openAddDialog() {
@@ -94,6 +91,7 @@ export function GenieACSIndex() {
         : await createGenieACSConfig(form)
       toast.success(result.message)
       setDialogOpen(false)
+      setIsLoading(true)
       await loadConfigs()
     } catch (error) {
       toast.error(getAuthErrorMessage(error))
@@ -108,6 +106,7 @@ export function GenieACSIndex() {
       const result = await deleteGenieACSConfig(deletingConfig.id)
       toast.success(result.message)
       setDeletingConfig(null)
+      setIsLoading(true)
       await loadConfigs()
     } catch (error) {
       toast.error(getAuthErrorMessage(error))
