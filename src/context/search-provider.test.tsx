@@ -109,7 +109,9 @@ describe('SearchProvider and CommandMenu', () => {
 
     await openCommandPalette(screen)
 
-    await userEvent.click(screen.getByText('Mikrotik'))
+    await userEvent.click(
+      screen.getByRole('option', { name: 'Mikrotik PPPoE' })
+    )
 
     expect(mocks.navigate).toHaveBeenCalledWith({ to: '/mikrotik/pppoe' })
     await expect
