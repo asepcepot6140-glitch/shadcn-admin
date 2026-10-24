@@ -1,14 +1,8 @@
 import { create } from 'zustand'
+import type { AuthUser } from '@/lib/auth-api'
 import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
 
-const ACCESS_TOKEN = 'thisisjustarandomstring'
-
-interface AuthUser {
-  accountNo: string
-  email: string
-  role: string[]
-  exp: number
-}
+const ACCESS_TOKEN = 'netcore_access_token'
 
 interface AuthState {
   auth: {

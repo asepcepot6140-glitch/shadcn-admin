@@ -17,20 +17,17 @@ import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors403RouteImport } from './routes/(errors)/403'
 import { Route as errors401RouteImport } from './routes/(errors)/401'
 import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
-import { Route as authSignIn2RouteImport } from './routes/(auth)/sign-in-2'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as authOtpRouteImport } from './routes/(auth)/otp'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
-import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
-import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
-import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
-import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
-import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
-import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
+import { Route as AuthenticatedGenieacsIndexRouteImport } from './routes/_authenticated/genieacs.index'
+import { Route as AuthenticatedMikrotikRouterRouteImport } from './routes/_authenticated/mikrotik/router'
 import { Route as AuthenticatedMikrotikPppoeRouteImport } from './routes/_authenticated/mikrotik/pppoe'
-import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedGenieacsDevicesRouteImport } from './routes/_authenticated/genieacs.devices'
+import { Route as AuthenticatedGenieacsDevicesIndexRouteImport } from './routes/_authenticated/genieacs.devices.index'
+import { Route as AuthenticatedGenieacsDevicesDeviceIdRouteImport } from './routes/_authenticated/genieacs.devices.$deviceId'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -71,11 +68,6 @@ const authSignUpRoute = authSignUpRouteImport.update({
   path: '/sign-up',
   getParentRoute: () => rootRouteImport,
 } as any)
-const authSignIn2Route = authSignIn2RouteImport.update({
-  id: '/(auth)/sign-in-2',
-  path: '/sign-in-2',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const authSignInRoute = authSignInRouteImport.update({
   id: '/(auth)/sign-in',
   path: '/sign-in',
@@ -103,40 +95,17 @@ const AuthenticatedSettingsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
-const AuthenticatedHelpCenterIndexRoute =
-  AuthenticatedHelpCenterIndexRouteImport.update({
-    id: '/help-center/',
-    path: '/help-center/',
+const AuthenticatedGenieacsIndexRoute =
+  AuthenticatedGenieacsIndexRouteImport.update({
+    id: '/genieacs/',
+    path: '/genieacs/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedAppsIndexRoute = AuthenticatedAppsIndexRouteImport.update({
-  id: '/apps/',
-  path: '/apps/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedSettingsNotificationsRoute =
-  AuthenticatedSettingsNotificationsRouteImport.update({
-    id: '/notifications',
-    path: '/notifications',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
-  } as any)
-const AuthenticatedSettingsDisplayRoute =
-  AuthenticatedSettingsDisplayRouteImport.update({
-    id: '/display',
-    path: '/display',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
-  } as any)
-const AuthenticatedSettingsAppearanceRoute =
-  AuthenticatedSettingsAppearanceRouteImport.update({
-    id: '/appearance',
-    path: '/appearance',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
-  } as any)
-const AuthenticatedSettingsAccountRoute =
-  AuthenticatedSettingsAccountRouteImport.update({
-    id: '/account',
-    path: '/account',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+const AuthenticatedMikrotikRouterRoute =
+  AuthenticatedMikrotikRouterRouteImport.update({
+    id: '/mikrotik/router',
+    path: '/mikrotik/router',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedMikrotikPppoeRoute =
   AuthenticatedMikrotikPppoeRouteImport.update({
@@ -144,11 +113,23 @@ const AuthenticatedMikrotikPppoeRoute =
     path: '/mikrotik/pppoe',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedErrorsErrorRoute =
-  AuthenticatedErrorsErrorRouteImport.update({
-    id: '/errors/$error',
-    path: '/errors/$error',
+const AuthenticatedGenieacsDevicesRoute =
+  AuthenticatedGenieacsDevicesRouteImport.update({
+    id: '/genieacs/devices',
+    path: '/genieacs/devices',
     getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedGenieacsDevicesIndexRoute =
+  AuthenticatedGenieacsDevicesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedGenieacsDevicesRoute,
+  } as any)
+const AuthenticatedGenieacsDevicesDeviceIdRoute =
+  AuthenticatedGenieacsDevicesDeviceIdRouteImport.update({
+    id: '/$deviceId',
+    path: '/$deviceId',
+    getParentRoute: () => AuthenticatedGenieacsDevicesRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -157,28 +138,24 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof authForgotPasswordRoute
   '/otp': typeof authOtpRoute
   '/sign-in': typeof authSignInRoute
-  '/sign-in-2': typeof authSignIn2Route
   '/sign-up': typeof authSignUpRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
-  '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/genieacs/devices': typeof AuthenticatedGenieacsDevicesRouteWithChildren
   '/mikrotik/pppoe': typeof AuthenticatedMikrotikPppoeRoute
-  '/settings/account': typeof AuthenticatedSettingsAccountRoute
-  '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/settings/display': typeof AuthenticatedSettingsDisplayRoute
-  '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
-  '/apps/': typeof AuthenticatedAppsIndexRoute
-  '/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/mikrotik/router': typeof AuthenticatedMikrotikRouterRoute
+  '/genieacs/': typeof AuthenticatedGenieacsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/genieacs/devices/$deviceId': typeof AuthenticatedGenieacsDevicesDeviceIdRoute
+  '/genieacs/devices/': typeof AuthenticatedGenieacsDevicesIndexRoute
 }
 export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordRoute
   '/otp': typeof authOtpRoute
   '/sign-in': typeof authSignInRoute
-  '/sign-in-2': typeof authSignIn2Route
   '/sign-up': typeof authSignUpRoute
   '/401': typeof errors401Route
   '/403': typeof errors403Route
@@ -186,15 +163,12 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
-  '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/mikrotik/pppoe': typeof AuthenticatedMikrotikPppoeRoute
-  '/settings/account': typeof AuthenticatedSettingsAccountRoute
-  '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/settings/display': typeof AuthenticatedSettingsDisplayRoute
-  '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
-  '/apps': typeof AuthenticatedAppsIndexRoute
-  '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/mikrotik/router': typeof AuthenticatedMikrotikRouterRoute
+  '/genieacs': typeof AuthenticatedGenieacsIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/genieacs/devices/$deviceId': typeof AuthenticatedGenieacsDevicesDeviceIdRoute
+  '/genieacs/devices': typeof AuthenticatedGenieacsDevicesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -203,7 +177,6 @@ export interface FileRoutesById {
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/otp': typeof authOtpRoute
   '/(auth)/sign-in': typeof authSignInRoute
-  '/(auth)/sign-in-2': typeof authSignIn2Route
   '/(auth)/sign-up': typeof authSignUpRoute
   '/(errors)/401': typeof errors401Route
   '/(errors)/403': typeof errors403Route
@@ -211,15 +184,13 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/_authenticated/genieacs/devices': typeof AuthenticatedGenieacsDevicesRouteWithChildren
   '/_authenticated/mikrotik/pppoe': typeof AuthenticatedMikrotikPppoeRoute
-  '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
-  '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
-  '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
-  '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
-  '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/_authenticated/mikrotik/router': typeof AuthenticatedMikrotikRouterRoute
+  '/_authenticated/genieacs/': typeof AuthenticatedGenieacsIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/genieacs/devices/$deviceId': typeof AuthenticatedGenieacsDevicesDeviceIdRoute
+  '/_authenticated/genieacs/devices/': typeof AuthenticatedGenieacsDevicesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -229,28 +200,24 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/otp'
     | '/sign-in'
-    | '/sign-in-2'
     | '/sign-up'
     | '/401'
     | '/403'
     | '/404'
     | '/500'
     | '/503'
-    | '/errors/$error'
+    | '/genieacs/devices'
     | '/mikrotik/pppoe'
-    | '/settings/account'
-    | '/settings/appearance'
-    | '/settings/display'
-    | '/settings/notifications'
-    | '/apps/'
-    | '/help-center/'
+    | '/mikrotik/router'
+    | '/genieacs/'
     | '/settings/'
+    | '/genieacs/devices/$deviceId'
+    | '/genieacs/devices/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/forgot-password'
     | '/otp'
     | '/sign-in'
-    | '/sign-in-2'
     | '/sign-up'
     | '/401'
     | '/403'
@@ -258,15 +225,12 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
-    | '/errors/$error'
     | '/mikrotik/pppoe'
-    | '/settings/account'
-    | '/settings/appearance'
-    | '/settings/display'
-    | '/settings/notifications'
-    | '/apps'
-    | '/help-center'
+    | '/mikrotik/router'
+    | '/genieacs'
     | '/settings'
+    | '/genieacs/devices/$deviceId'
+    | '/genieacs/devices'
   id:
     | '__root__'
     | '/_authenticated'
@@ -274,7 +238,6 @@ export interface FileRouteTypes {
     | '/(auth)/forgot-password'
     | '/(auth)/otp'
     | '/(auth)/sign-in'
-    | '/(auth)/sign-in-2'
     | '/(auth)/sign-up'
     | '/(errors)/401'
     | '/(errors)/403'
@@ -282,15 +245,13 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/_authenticated/'
-    | '/_authenticated/errors/$error'
+    | '/_authenticated/genieacs/devices'
     | '/_authenticated/mikrotik/pppoe'
-    | '/_authenticated/settings/account'
-    | '/_authenticated/settings/appearance'
-    | '/_authenticated/settings/display'
-    | '/_authenticated/settings/notifications'
-    | '/_authenticated/apps/'
-    | '/_authenticated/help-center/'
+    | '/_authenticated/mikrotik/router'
+    | '/_authenticated/genieacs/'
     | '/_authenticated/settings/'
+    | '/_authenticated/genieacs/devices/$deviceId'
+    | '/_authenticated/genieacs/devices/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -298,7 +259,6 @@ export interface RootRouteChildren {
   authForgotPasswordRoute: typeof authForgotPasswordRoute
   authOtpRoute: typeof authOtpRoute
   authSignInRoute: typeof authSignInRoute
-  authSignIn2Route: typeof authSignIn2Route
   authSignUpRoute: typeof authSignUpRoute
   errors401Route: typeof errors401Route
   errors403Route: typeof errors403Route
@@ -365,13 +325,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignUpRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(auth)/sign-in-2': {
-      id: '/(auth)/sign-in-2'
-      path: '/sign-in-2'
-      fullPath: '/sign-in-2'
-      preLoaderRoute: typeof authSignIn2RouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(auth)/sign-in': {
       id: '/(auth)/sign-in'
       path: '/sign-in'
@@ -407,47 +360,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
-    '/_authenticated/help-center/': {
-      id: '/_authenticated/help-center/'
-      path: '/help-center'
-      fullPath: '/help-center/'
-      preLoaderRoute: typeof AuthenticatedHelpCenterIndexRouteImport
+    '/_authenticated/genieacs/': {
+      id: '/_authenticated/genieacs/'
+      path: '/genieacs'
+      fullPath: '/genieacs/'
+      preLoaderRoute: typeof AuthenticatedGenieacsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/apps/': {
-      id: '/_authenticated/apps/'
-      path: '/apps'
-      fullPath: '/apps/'
-      preLoaderRoute: typeof AuthenticatedAppsIndexRouteImport
+    '/_authenticated/mikrotik/router': {
+      id: '/_authenticated/mikrotik/router'
+      path: '/mikrotik/router'
+      fullPath: '/mikrotik/router'
+      preLoaderRoute: typeof AuthenticatedMikrotikRouterRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/settings/notifications': {
-      id: '/_authenticated/settings/notifications'
-      path: '/notifications'
-      fullPath: '/settings/notifications'
-      preLoaderRoute: typeof AuthenticatedSettingsNotificationsRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
-    }
-    '/_authenticated/settings/display': {
-      id: '/_authenticated/settings/display'
-      path: '/display'
-      fullPath: '/settings/display'
-      preLoaderRoute: typeof AuthenticatedSettingsDisplayRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
-    }
-    '/_authenticated/settings/appearance': {
-      id: '/_authenticated/settings/appearance'
-      path: '/appearance'
-      fullPath: '/settings/appearance'
-      preLoaderRoute: typeof AuthenticatedSettingsAppearanceRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
-    }
-    '/_authenticated/settings/account': {
-      id: '/_authenticated/settings/account'
-      path: '/account'
-      fullPath: '/settings/account'
-      preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
     '/_authenticated/mikrotik/pppoe': {
       id: '/_authenticated/mikrotik/pppoe'
@@ -456,31 +381,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMikrotikPppoeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/errors/$error': {
-      id: '/_authenticated/errors/$error'
-      path: '/errors/$error'
-      fullPath: '/errors/$error'
-      preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
+    '/_authenticated/genieacs/devices': {
+      id: '/_authenticated/genieacs/devices'
+      path: '/genieacs/devices'
+      fullPath: '/genieacs/devices'
+      preLoaderRoute: typeof AuthenticatedGenieacsDevicesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/genieacs/devices/': {
+      id: '/_authenticated/genieacs/devices/'
+      path: '/'
+      fullPath: '/genieacs/devices/'
+      preLoaderRoute: typeof AuthenticatedGenieacsDevicesIndexRouteImport
+      parentRoute: typeof AuthenticatedGenieacsDevicesRoute
+    }
+    '/_authenticated/genieacs/devices/$deviceId': {
+      id: '/_authenticated/genieacs/devices/$deviceId'
+      path: '/$deviceId'
+      fullPath: '/genieacs/devices/$deviceId'
+      preLoaderRoute: typeof AuthenticatedGenieacsDevicesDeviceIdRouteImport
+      parentRoute: typeof AuthenticatedGenieacsDevicesRoute
     }
   }
 }
 
 interface AuthenticatedSettingsRouteRouteChildren {
-  AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
-  AuthenticatedSettingsAppearanceRoute: typeof AuthenticatedSettingsAppearanceRoute
-  AuthenticatedSettingsDisplayRoute: typeof AuthenticatedSettingsDisplayRoute
-  AuthenticatedSettingsNotificationsRoute: typeof AuthenticatedSettingsNotificationsRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
 }
 
 const AuthenticatedSettingsRouteRouteChildren: AuthenticatedSettingsRouteRouteChildren =
   {
-    AuthenticatedSettingsAccountRoute: AuthenticatedSettingsAccountRoute,
-    AuthenticatedSettingsAppearanceRoute: AuthenticatedSettingsAppearanceRoute,
-    AuthenticatedSettingsDisplayRoute: AuthenticatedSettingsDisplayRoute,
-    AuthenticatedSettingsNotificationsRoute:
-      AuthenticatedSettingsNotificationsRoute,
     AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
   }
 
@@ -489,22 +419,41 @@ const AuthenticatedSettingsRouteRouteWithChildren =
     AuthenticatedSettingsRouteRouteChildren,
   )
 
+interface AuthenticatedGenieacsDevicesRouteChildren {
+  AuthenticatedGenieacsDevicesDeviceIdRoute: typeof AuthenticatedGenieacsDevicesDeviceIdRoute
+  AuthenticatedGenieacsDevicesIndexRoute: typeof AuthenticatedGenieacsDevicesIndexRoute
+}
+
+const AuthenticatedGenieacsDevicesRouteChildren: AuthenticatedGenieacsDevicesRouteChildren =
+  {
+    AuthenticatedGenieacsDevicesDeviceIdRoute:
+      AuthenticatedGenieacsDevicesDeviceIdRoute,
+    AuthenticatedGenieacsDevicesIndexRoute:
+      AuthenticatedGenieacsDevicesIndexRoute,
+  }
+
+const AuthenticatedGenieacsDevicesRouteWithChildren =
+  AuthenticatedGenieacsDevicesRoute._addFileChildren(
+    AuthenticatedGenieacsDevicesRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedGenieacsDevicesRoute: typeof AuthenticatedGenieacsDevicesRouteWithChildren
   AuthenticatedMikrotikPppoeRoute: typeof AuthenticatedMikrotikPppoeRoute
-  AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
-  AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedMikrotikRouterRoute: typeof AuthenticatedMikrotikRouterRoute
+  AuthenticatedGenieacsIndexRoute: typeof AuthenticatedGenieacsIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedGenieacsDevicesRoute:
+    AuthenticatedGenieacsDevicesRouteWithChildren,
   AuthenticatedMikrotikPppoeRoute: AuthenticatedMikrotikPppoeRoute,
-  AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
-  AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
+  AuthenticatedMikrotikRouterRoute: AuthenticatedMikrotikRouterRoute,
+  AuthenticatedGenieacsIndexRoute: AuthenticatedGenieacsIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -515,7 +464,6 @@ const rootRouteChildren: RootRouteChildren = {
   authForgotPasswordRoute: authForgotPasswordRoute,
   authOtpRoute: authOtpRoute,
   authSignInRoute: authSignInRoute,
-  authSignIn2Route: authSignIn2Route,
   authSignUpRoute: authSignUpRoute,
   errors401Route: errors401Route,
   errors403Route: errors403Route,

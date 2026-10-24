@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
-import { AxiosError } from 'axios'
+import axios, { AxiosError } from 'axios'
 import {
   QueryCache,
   QueryClient,
@@ -53,9 +53,7 @@ const queryClient = new QueryClient({
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {
           toast.error('Session expired!')
-          useAuthStore.getState().auth.reset()
-          const redirect = `${router.history.location.href}`
-          router.navigate({ to: '/sign-in', search: { redirect } })
+          redirectToSignIn()
         }
         if (error.response?.status === 500) {
           toast.error('Internal Server Error!')
@@ -79,6 +77,26 @@ const router = createRouter({
   defaultPreload: 'intent',
   defaultPreloadStaleTime: 0,
 })
+
+function redirectToSignIn() {
+  const auth = useAuthStore.getState().auth
+  if (!auth.accessToken) return
+
+  auth.reset()
+  if (router.history.location.pathname === '/sign-in') return
+
+  void router.navigate({ to: '/sign-in', replace: true })
+}
+
+axios.interceptors.response.use(
+  (response) => response,
+  (error: unknown) => {
+    if (error instanceof AxiosError && error.response?.status === 401) {
+      redirectToSignIn()
+    }
+    return Promise.reject(error)
+  }
+)
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {

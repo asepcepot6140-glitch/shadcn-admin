@@ -1,88 +1,155 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, type RenderResult } from 'vitest-browser-react'
-import { type Locator, userEvent } from 'vitest/browser'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { render } from 'vitest-browser-react'
+import { userEvent } from 'vitest/browser'
 import { SignUpForm } from './sign-up-form'
 
-const FORM_MESSAGES = {
-  emailEmpty: 'Please enter your email.',
-  passwordEmpty: 'Please enter your password.',
-  confirmPasswordEmpty: 'Please confirm your password.',
-  passwordMismatch: "Passwords don't match.",
-} as const
+const { registerUserMock, toastErrorMock, toastSuccessMock, navigateMock } =
+  vi.hoisted(() => ({
+    registerUserMock: vi.fn(),
+    toastErrorMock: vi.fn(),
+    toastSuccessMock: vi.fn(),
+    navigateMock: vi.fn(),
+  }))
 
-const toastPromise = vi.hoisted(() =>
-  vi.fn((p: Promise<unknown>, opts: { success?: () => unknown }) => {
-    p.then(() => opts.success?.())
-  })
-)
+vi.mock('@/lib/auth-api', () => ({
+  getAuthErrorMessage: (error: unknown) =>
+    error instanceof Error ? error.message : 'Request failed',
+  registerUser: registerUserMock,
+}))
 
-vi.mock('sonner', () => ({ toast: { promise: toastPromise } }))
+vi.mock('sonner', () => ({
+  toast: { error: toastErrorMock, success: toastSuccessMock },
+}))
+
+vi.mock('@tanstack/react-router', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@tanstack/react-router')>()
+  return { ...actual, useNavigate: () => navigateMock }
+})
 
 describe('SignUpForm', () => {
-  let screen: RenderResult
-  let emailInput: Locator
-  let passwordInput: Locator
-  let confirmPasswordInput: Locator
-  let submitButton: Locator
-
-  beforeEach(async () => {
+  beforeEach(() => {
     vi.clearAllMocks()
-
-    screen = await render(<SignUpForm />)
-    emailInput = screen.getByRole('textbox', { name: /^Email$/i })
-    passwordInput = screen.getByLabelText(/^Password$/i)
-    confirmPasswordInput = screen.getByLabelText(/^Confirm Password$/i)
-    submitButton = screen.getByRole('button', { name: /^Create Account$/i })
+    registerUserMock.mockResolvedValue({
+      message: 'Registration successful',
+      user: {
+        id: 7,
+        name: 'Test User',
+        email: 'a@b.com',
+        phone: '081234567890',
+      },
+    })
   })
 
-  afterEach(() => {
-    vi.useRealTimers()
-  })
-
-  it('renders fields and submit button', async () => {
-    await expect.element(emailInput).toBeInTheDocument()
-    await expect.element(passwordInput).toBeInTheDocument()
-    await expect.element(confirmPasswordInput).toBeInTheDocument()
-    await expect.element(submitButton).toBeInTheDocument()
-  })
-
-  it('shows validation messages when submitting empty form', async () => {
-    await userEvent.click(submitButton)
+  it('renders backend registration fields and submit button', async () => {
+    const screen = await render(<SignUpForm />)
 
     await expect
-      .element(screen.getByText(FORM_MESSAGES.emailEmpty))
+      .element(screen.getByRole('textbox', { name: /^Full name$/i }))
       .toBeInTheDocument()
     await expect
-      .element(screen.getByText(FORM_MESSAGES.passwordEmpty))
+      .element(screen.getByRole('textbox', { name: /^Email$/i }))
       .toBeInTheDocument()
     await expect
-      .element(screen.getByText(FORM_MESSAGES.confirmPasswordEmpty))
+      .element(screen.getByRole('textbox', { name: /^WhatsApp number$/i }))
+      .toBeInTheDocument()
+    await expect
+      .element(screen.getByLabelText(/^Password$/i))
+      .toBeInTheDocument()
+    await expect
+      .element(screen.getByLabelText(/^Confirm Password$/i))
       .toBeInTheDocument()
   })
 
-  it('shows a mismatch error when passwords do not match', async () => {
-    await userEvent.fill(emailInput, 'a@b.com')
-    await userEvent.fill(passwordInput, '1234567')
-    await userEvent.fill(confirmPasswordInput, '7654321')
+  it('shows required field validation on empty submission', async () => {
+    const screen = await render(<SignUpForm />)
+    await userEvent.click(
+      screen.getByRole('button', { name: /^Create Account$/i })
+    )
 
-    await userEvent.click(submitButton)
     await expect
-      .element(screen.getByText(FORM_MESSAGES.passwordMismatch))
+      .element(screen.getByText('Name must be at least 2 characters long.'))
+      .toBeInTheDocument()
+    await expect
+      .element(screen.getByText('Please enter your email.'))
+      .toBeInTheDocument()
+    await expect
+      .element(
+        screen.getByText('WhatsApp number must be at least 10 characters long.')
+      )
+      .toBeInTheDocument()
+    await expect
+      .element(screen.getByText('Please enter your password.'))
       .toBeInTheDocument()
   })
 
-  it('disables submit while submitting and re-enables after timeout', async () => {
-    vi.useFakeTimers()
+  it('posts the backend registration fields and navigates to sign in', async () => {
+    const screen = await render(<SignUpForm />)
+    await userEvent.fill(
+      screen.getByRole('textbox', { name: /^Full name$/i }),
+      'Test User'
+    )
+    await userEvent.fill(
+      screen.getByRole('textbox', { name: /^Email$/i }),
+      'a@b.com'
+    )
+    await userEvent.fill(
+      screen.getByRole('textbox', { name: /^WhatsApp number$/i }),
+      '081234567890'
+    )
+    await userEvent.fill(screen.getByLabelText(/^Password$/i), '12345678')
+    await userEvent.fill(
+      screen.getByLabelText(/^Confirm Password$/i),
+      '12345678'
+    )
+    await userEvent.click(
+      screen.getByRole('button', { name: /^Create Account$/i })
+    )
 
-    await userEvent.fill(emailInput, 'a@b.com')
-    await userEvent.fill(passwordInput, '1234567')
-    await userEvent.fill(confirmPasswordInput, '1234567')
+    await vi.waitFor(() => expect(registerUserMock).toHaveBeenCalledOnce())
+    expect(registerUserMock).toHaveBeenCalledWith({
+      name: 'Test User',
+      email: 'a@b.com',
+      phone: '081234567890',
+      password: '12345678',
+    })
+    expect(toastSuccessMock).toHaveBeenCalledWith('Registration successful')
+    await vi.waitFor(() =>
+      expect(navigateMock).toHaveBeenCalledWith({
+        to: '/sign-in',
+        replace: true,
+      })
+    )
+  })
 
-    await userEvent.click(submitButton)
-    await expect.element(submitButton).toBeDisabled()
+  it('shows backend registration failures', async () => {
+    registerUserMock.mockRejectedValueOnce(
+      new Error('Email is already registered')
+    )
+    const screen = await render(<SignUpForm />)
+    await userEvent.fill(
+      screen.getByRole('textbox', { name: /^Full name$/i }),
+      'Test User'
+    )
+    await userEvent.fill(
+      screen.getByRole('textbox', { name: /^Email$/i }),
+      'a@b.com'
+    )
+    await userEvent.fill(
+      screen.getByRole('textbox', { name: /^WhatsApp number$/i }),
+      '081234567890'
+    )
+    await userEvent.fill(screen.getByLabelText(/^Password$/i), '12345678')
+    await userEvent.fill(
+      screen.getByLabelText(/^Confirm Password$/i),
+      '12345678'
+    )
+    await userEvent.click(
+      screen.getByRole('button', { name: /^Create Account$/i })
+    )
 
-    await vi.advanceTimersByTimeAsync(2000)
-    await expect.element(submitButton).toBeEnabled()
-    expect(toastPromise).toHaveBeenCalledOnce()
+    await vi.waitFor(() =>
+      expect(toastErrorMock).toHaveBeenCalledWith('Email is already registered')
+    )
+    expect(navigateMock).not.toHaveBeenCalled()
   })
 })

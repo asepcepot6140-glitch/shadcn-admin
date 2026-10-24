@@ -5,6 +5,12 @@
 
 const DEFAULT_MAX_AGE = 60 * 60 * 24 * 7 // 7 days
 
+// Secure hanya valid di HTTPS; localhost dev tetap memakai HTTP.
+function cookieAttributes(): string {
+  const secure = window.location.protocol === 'https:' ? '; Secure' : ''
+  return `; path=/; SameSite=Strict${secure}`
+}
+
 /**
  * Get a cookie value by name
  */
@@ -30,7 +36,7 @@ export function setCookie(
 ): void {
   if (typeof document === 'undefined') return
 
-  document.cookie = `${name}=${value}; path=/; max-age=${maxAge}`
+  document.cookie = `${name}=${value}${cookieAttributes()}; max-age=${maxAge}`
 }
 
 /**
@@ -39,5 +45,5 @@ export function setCookie(
 export function removeCookie(name: string): void {
   if (typeof document === 'undefined') return
 
-  document.cookie = `${name}=; path=/; max-age=0`
+  document.cookie = `${name}=${cookieAttributes()}; max-age=0`
 }

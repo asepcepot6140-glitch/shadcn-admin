@@ -1,5 +1,9 @@
+import { useEffect } from 'react'
 import { Outlet } from '@tanstack/react-router'
+import { toast } from 'sonner'
+import { getAuthErrorMessage, getCurrentUser } from '@/lib/auth-api'
 import { getCookie } from '@/lib/cookies'
+import { useAuthStore } from '@/stores/auth-store'
 import { cn } from '@/lib/utils'
 import { LayoutProvider } from '@/context/layout-provider'
 import { SearchProvider } from '@/context/search-provider'
@@ -13,6 +17,25 @@ type AuthenticatedLayoutProps = {
 
 export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
   const defaultOpen = getCookie('sidebar_state') !== 'false'
+  const accessToken = useAuthStore((state) => state.auth.accessToken)
+
+  useEffect(() => {
+    if (!accessToken) return
+
+    let isCurrent = true
+    getCurrentUser(accessToken)
+      .then((user) => {
+        if (isCurrent) useAuthStore.getState().auth.setUser(user)
+      })
+      .catch((error: unknown) => {
+        if (isCurrent) toast.error(getAuthErrorMessage(error))
+      })
+
+    return () => {
+      isCurrent = false
+    }
+  }, [accessToken])
+
   return (
     <SearchProvider>
       <LayoutProvider>
